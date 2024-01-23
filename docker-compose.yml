@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+
+  app:
+    container_name: bitcoin
+    build:
+      context: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    restart: always
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=db
+      - DB_PORT=${DB_PORT}
+
+  db:
+    container_name: db
+    image: postgres
+    restart: always
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+#  adminer:
+#    image: adminer
+#    restart: always
+#    ports:
+#      - "8080:8080"
+
+volumes:
+  db_data:
